@@ -34,9 +34,6 @@ namespace WebAtividadeEntrevista.Controllers
 
             } else
             {
-
-
-
                 if (!this.ModelState.IsValid)
                 {
                     List<string> erros = (from item in ModelState.Values
@@ -161,5 +158,36 @@ namespace WebAtividadeEntrevista.Controllers
                 return Json(new { Result = "ERROR", Message = ex.Message });
             }
         }
+
+        [HttpPost]
+
+        public JsonResult Beneficiario(BeneficiarioModel model)
+        {
+            try
+            {
+                int qtd = 0;
+                string campo = string.Empty;
+                string crescente = string.Empty;
+                string[] array = jtSorting.Split(' ');
+
+                if (array.Length > 0)
+                    campo = array[0];
+
+                if (array.Length > 1)
+                    crescente = array[1];
+
+                List<Cliente> clientes = new BoCliente().Pesquisa(jtStartIndex, jtPageSize, campo, crescente.Equals("ASC", StringComparison.InvariantCultureIgnoreCase), out qtd);
+
+                //Return result to jTable
+                return Json(new { Result = "OK", Records = clientes, TotalRecordCount = qtd });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Result = "ERROR", Message = ex.Message });
+            }
+
+        }
+
+
     }
 }
